@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+    <head> 
+        <title> Bet - Calculator</title>
+        <style>
+            .hidden {
+                display:none;
+            }
+            .margin {
+                margin-top: 10px;
+            }
+        </style>
+        <script>
+        let num_of_tips = 0;
+        results = []
+        let a = 0;
+        results_new = []
+
+        function add_tip () {
+            const el = document.getElementById("game_type")
+            new_element = el.cloneNode(true);
+            new_element.id = el.id + num_of_tips
+            
+            //document.body.appendChild(new_element);
+            document.getElementById('games_input').appendChild(new_element)
+
+            let new_select_element = document.querySelector("#"+ new_element.id + " > select");
+            add_bet_type_change_listener(new_select_element);
+            num_of_tips++;
+        }   
+
+
+        let add_bet_type_change_listener = function(select_element) { 
+            if (typeof select_element === "undefined") {
+                select_element = document.querySelector("#game_type" + num_of_tips + "> select");
+                
+            }
+            if (!select_element) {
+                return;
+            }
+
+            select_element.addEventListener("change", function() {
+                if (this.value == "winner") {
+                    html = document.getElementById('winner').outerHTML;
+                    select_element.insertAdjacentHTML("afterend", html );
+                }
+                else if (this.value == "total_goals") {
+                    html = document.getElementById('total_goals').outerHTML;
+                    select_element.insertAdjacentHTML("afterend", html );
+                }
+                else if (this.value == "double_chance") {
+                    html = document.getElementById('double_chance').outerHTML;
+                    select_element.insertAdjacentHTML("afterend", html );
+                }
+                else if (this.value == "t1_total_goals") {
+                    html = document.getElementById('t1_total_goals').outerHTML;
+                    select_element.insertAdjacentHTML("afterend", html );
+                }
+                else if (this.value == "t2_total_goals") {
+                    html = document.getElementById('t2_total_goals').outerHTML;
+                    select_element.insertAdjacentHTML("afterend", html);
+                }
+                else if (this.value == "both_teams_score") {
+                    html = document.getElementById('both_teams_score').outerHTML;
+                    select_element.insertAdjacentHTML("afterend", html);
+                }
+                else if (this.value == 'one_team_dont_score') {
+                    console.log("in if")
+                    html = document.getElementById('one_team_dont_score').outerHTML;
+                    select_element.insertAdjacentHTML("afterend", html);
+                }
+                else if (this.value == "odd") {
+                    html = document.getElementById('odd').outerHTML;
+                    select_element.insertAdjacentHTML("afterend", html);
+                }
+                else if (this.value == "even") {
+                    html = document.getElementById('even').outerHTML;
+                    select_element.insertAdjacentHTML("afterend", html);
+                }
+            });
+        }
+
+        
+
+        
+
+        function winner_calculate_function(el) {
+            let type = el.querySelector("select").value;
+            
+            console.log(winner(results, type));
+        };
+
+        function total_goals_calculate_function (el) {
+            let goals_from = el.querySelector("#goals_from").value;
+            let goals_to = el.querySelector("#goals_to").value;
+          
+            console.log(goals_scored(results,goals_from,goals_to));
+          
+        };
+
+        function double_chance_calculate_function (el) {
+            let type = el.querySelector("select").value;
+            
+            console.log(double_chance(results, type));
+        };
+
+        function odd_calculate_funciton(el) {
+            console.log(odd(results));
+        }
+
+        function even_calculate_funciton(el) {
+           console.log(even(results));
+           
+        }
+
+        function t1_total_goals_calculate_function(el) {
+            let goals_from = el.querySelector("#goalsT1_from").value;
+            let goals_to = el.querySelector("#goalsT1_to").value;
+
+
+            console.log(t1_total_goals(results,goals_from,goals_to))
+        }
+
+        function t2_total_goals_calculate_fucntion(el) {
+            let goals_from = el.querySelector("#goalsT2_from").value;
+            let goals_to = el.querySelector("#goalsT2_to").value;
+
+
+            console.log(t2_total_goals(results,goals_from,goals_to))
+        }
+
+        function both_teams_score_calculate_function (el) {
+            console.log(both_teams_score(results));
+        }
+
+        function one_team_dont_score_calculate_function (el) {
+            console.log(one_team_dont_score(results));
+        }
+        
+        let calculate_functions = {
+            'winner': winner_calculate_function,
+            'total_goals': total_goals_calculate_function,
+            'double_chance' : double_chance_calculate_function,
+            'both_teams_score' : both_teams_score_calculate_function,
+            'one_team_dont_score' : one_team_dont_score_calculate_function,
+            'odd' : odd_calculate_funciton,
+            'even' : even_calculate_funciton,
+            't1_total_goals' : t1_total_goals_calculate_function,
+            't2_total_goals' : t2_total_goals_calculate_fucntion
+           
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            add_bet_type_change_listener();
+            document.getElementById("calculate_button").addEventListener("click", function () {
+                    
+                for (element of document.querySelectorAll('#games_input .game-wrapper')) {
+                    let game_type = element.dataset.gameType;
+                    calculate_functions[game_type](element)
+
+                }
+
+            });
+
+        });
+
+       
+        
+
+
+    for (let i  = 0; i <= 120; i++) {
+        results[i] = []
+        for (let j = 0; j <=1; j++){
+            if (j == 0) {
+                results[i][j] = Math.floor(i/11)
+            }
+            else {
+                results[i][j] = i % 11
+            }
+        }
+    }
+        
+
+    
+        function winner(array_of_results, win) {
+        for (let result_combination of array_of_results) {
+
+            if (win == 1 && (result_combination[0] > result_combination[1])){
+                
+                 array_of_results.splice(result_combination)
+                
+            } else if (win == "x" && !(result_combination[0] == result_combination[1])) {
+               
+                    results_new[a] = result_combination
+                    a++;
+                
+
+            } else if(win == 2 && !(result_combination[0] < result_combination[1])) {
+               
+                    results_new[a] = result_combination
+                    a++;
+            }
+        }
+        return results_new
+    }
+           
+         function goals_scored (array_of_results,goals,max_goals) {
+            for (let result_combination of array_of_results) {
+                if (max_goals == "exactly" && (!(result_combination[0] + result_combination[1]  == goals))) {
+                
+                    results_new[a] = result_combination
+                    a++;
+
+                } else if (max_goals == "plus" && result_combination[0] + result_combination[1] < goals) {
+                    
+                    results_new[a] = result_combination
+                    a++;
+
+                } else if (max_goals == "no" && result_combination[0] + result_combination[1] != goals) {
+                    
+                    results_new[a] = result_combination
+                    a++;
+                }
+                else if (result_combination[0]  >= goals && result_combination[0] + result_combination[1] <= max_goals) {
+
+                            results_new[a] = result_combination
+                            a++;
+                }
+            }           
+            return results_new
+        }
+
+        function double_chance (array_of_results, type) {
+            for (let result_combination of array_of_results) {
+                if (type == "1x" && result_combination[0] < result_combination[1]){
+
+                    results_new[a] = result_combination;
+                    a++;
+                } else if (type == 12 && result_combination[0] == result_combination[1]) {
+                    
+                    results_new[a] = result_combination;
+                    a++
+                } else if (type == "x2" && result_combination[0] > result_combination[1]){
+                    
+                    results_new[a] = result_combination;
+                    a++
+                }
+            }
+            return results_new
+        }
+
+        function both_teams_score (array_of_results) {
+            for (let result_combination of array_of_results) {
+                if (result_combination[0] == 0 || result_combination[1] == 0 )  {
+                    results_new[a] = result_combination
+                    a++;
+                }
+            }
+
+            return results_new
+        }
+
+        function one_team_dont_score(array_of_results) {
+            for (let result_combination of array_of_results) {
+                if (result_combination[0] != 0 && result_combination[1] != 0 ) {
+                    results_new[a] = result_combination;
+                    a++;
+                }
+            }
+            return results_new
+        }
+
+        function odd (array_of_results) {
+            for (let result_combination of array_of_results) {
+
+                if ((result_combination[0] + result_combination[1]) % 2 == 0){
+                    results_new[a] = result_combination;
+                    a++
+                }
+            }
+            return results_new
+        }
+    
+        function even (array_of_results) {
+            for (let result_combination of array_of_results) {
+
+                if ((result_combination[0] + result_combination[1]) % 2 != 0){
+                    results_new[a] = result_combination;
+                    a++
+                }
+            }
+            return results_new
+        }
+
+        function t1_total_goals (array_of_results,goals,max_goals) {
+            for (let result_combination of array_of_results) {
+                if (max_goals == "exactly" && (!(result_combination[0]  == goals))) {
+                
+                    results_new[a] = result_combination
+                    a++;
+
+                } else if (max_goals == "plus" && result_combination[0] < goals) {
+                    
+                    results_new[a] = result_combination
+                    a++;
+
+                } else if (max_goals == "no" && result_combination[0] != goals) {
+                    
+                    results_new[a] = result_combination
+                    a++;
+                }
+                else if (result_combination[0]  >= goals && result_combination[0] <= max_goals) {
+
+                            results_new[a] = result_combination
+                            a++;
+                }
+            }           
+            return results_new
+        }
+        
+        function t2_total_goals (array_of_results,goals,max_goals) {
+            for (let result_combination of array_of_results) {
+                if (max_goals == "exactly" && (!(result_combination[1]  == goals))) {
+                
+                    results_new[a] = result_combination
+                    a++;
+
+                } else if (max_goals == "plus" && result_combination[1] < goals) {
+                    
+                    results_new[a] = result_combination
+                    a++;
+
+                } else if (max_goals == "no" && result_combination[1] != goals) {
+                    
+                    results_new[a] = result_combination
+                    a++;
+                }
+                else if (result_combination[1]  >= goals && result_combination[1] <= max_goals) {
+
+                            results_new[a] = result_combination
+                            a++;
+                }
+            }           
+            return results_new
+        }
+    
+        </script>
+    </head>
+    <body>        
+        <button  class = 'margin' type="button" onclick= "add_tip()">Додади тип!</button>
+
+        <div id="games_input">
+
+        </div>
+
+
+    
+        <button class = 'margin' type="button" id="calculate_button">Пресметај!</button>
+        <div id="templates">
+            <div class="hidden ">
+                <div id="game_type" class = 'margin' >
+                    <select id="type" name="type" class="bet-type">
+                        <option value = "" selected disabled hidden>Одбери тип на игра</option>
+                        <option value="winner">Победник на мечот</option>
+                        <option value="total_goals">Вкупно голови</option>
+                        <option value="both_teams_score">Двата тима даваат гол -ГГ</option>
+                        <option value="one_team_dont_score">Едниот тим не дава гол или е 0:0</option>
+                        <option value="double_chance">Двојна шанса</option>
+                        <option value="even">Пар</option>
+                        <option value="odd">Непар</option>
+                        <option value="t1_total_goals">Број на голови на прв тим</option>
+                        <option value="t2_total_goals">Број на голови на втор тим</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hidden">
+                <div id='winner' class="game-wrapper margin" data-game-type="winner"> 
+                    <select id='winner_select' >
+                        <option value = '' selected disabled hidden> Одбери тип</option>
+                        <option value = '1'>1</option> 
+                        <option value = 'x'>x</option> 
+                        <option value = '2'>2</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hidden" >   
+                <div id="total_goals" class="game-wrapper margin" data-game-type="total_goals">      
+                    <select id= 'goals_from' class="margin">
+                        <option value = '' selected disabled hidden>Од  </option>
+                        <option value = '0'>0</option> 
+                        <option value = '1'>1</option> 
+                        <option value = '2'>2</option>
+                        <option value = '3'>3</option> 
+                        <option value = '4'>4</option> 
+                        <option value = '5'>5</option>
+                        <option value = '6'>6</option> 
+                        <option value = '7'>7</option> 
+                        <option value = '8'>8</option>
+                        <option value = '8'>9</option>
+                    </select>
+                    <select id='goals_to' class="margin"  >
+                        <option value = '' selected disabled hidden>До</option>
+                        <option value = '1'>1</option> 
+                        <option value = '2'>2</option>
+                        <option value = '3'>3</option> 
+                        <option value = '4'>4</option> 
+                        <option value = '5'>5</option>
+                        <option value = '6'>6</option> 
+                        <option value = '7'>7</option> 
+                        <option value = '8'>8</option>
+                        <option value = '9'>9</option>
+                        <option value = 'exactly'>Точно</option> 
+                        <option value = 'plus'>+</option> 
+                        <option value = 'no'>Не</option> 
+                    </select>
+                </div>
+            </div>
+            <div class="hidden">
+                <div id = 'double_chance' class="game-wrapper margin" data-game-type="double_chance" > 
+                    <select id= 'double_chance_sel' >
+                        <option value = '' selected disabled hidden> Одбери тип</option>
+                        <option value = '1x'>1x</option> 
+                        <option value = '12'>12</option> 
+                        <option value = 'x2'>x2</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hidden" >   
+                <div id="t1_total_goals" class="game-wrapper margin" data-game-type="t1_total_goals"> 
+                    <select id= 'goalsT1_from' name = 'tip' class="margin">
+                        <option value = '' selected disabled hidden> Од</option>
+                        <option value = '0'>0</option> 
+                        <option value = '1'>1</option> 
+                        <option value = '2'>2</option>
+                        <option value = '3'>3</option> 
+                        <option value = '4'>4</option> 
+                        <option value = '5'>5</option>
+                        <option value = '6'>6</option> 
+                        <option value = '7'>7</option> 
+                        <option value = '8'>8</option>
+                        <option value = '8'>9</option>
+                    </select>
+                    <select id= 'goalsT1_to' name = 'tip' class="margin">
+                        <option value = '' selected disabled hidden> До</option>
+                        <option value = '1'>1</option> 
+                        <option value = '2'>2</option>
+                        <option value = '3'>3</option> 
+                        <option value = '4'>4</option> 
+                        <option value = '5'>5</option>
+                        <option value = '6'>6</option> 
+                        <option value = '7'>7</option> 
+                        <option value = '8'>8</option>
+                        <option value = '8'>9</option>
+                        <option value = 'exactly'>Точно</option> 
+                        <option value = 'plus'>+</option> 
+                        <option value = 'no'>Не</option> 
+                    </select>
+                </div>
+            </div>
+            <div class="hidden" >   
+                <div id="t2_total_goals" class="game-wrapper margin" data-game-type="t2_total_goals">    
+                        <select id= 'goalsT2_from' name = 'tip'>
+                            <option value = '' selected disabled hidden> Одбери тип</option>
+                            <option value = '0'>0</option> 
+                            <option value = '1'>1</option> 
+                            <option value = '2'>2</option>
+                            <option value = '3'>3</option> 
+                            <option value = '4'>4</option> 
+                            <option value = '5'>5</option>
+                            <option value = '6'>6</option> 
+                            <option value = '7'>7</option> 
+                            <option value = '8'>8</option>
+                            <option value = '8'>9</option>
+                        </select>
+                        <select id= 'goalsT2_to' name = 'tip' class="margin">
+                            <option value = '' selected disabled hidden> Одбери тип</option>
+                            <option value = '1'>1</option> 
+                            <option value = '2'>2</option>
+                            <option value = '3'>3</option> 
+                            <option value = '4'>4</option> 
+                            <option value = '5'>5</option>
+                            <option value = '6'>6</option> 
+                            <option value = '7'>7</option> 
+                            <option value = '8'>8</option>
+                            <option value = '8'>9</option>
+                            <option value = 'exactly'>Точно</option> 
+                            <option value = 'plus'>+</option> 
+                            <option value = 'no'>Не</option> 
+                        </select>
+                </div>
+            </div>
+            <div class="hidden game-wrapper" id="both_teams_score"  data-game-type="both_teams_score">
+
+            </div>
+            <div class="hidden game-wrapper" id="one_team_dont_score" data-game-type="one_team_dont_score">
+
+            </div>
+            <div class="hidden game-wrapper" id="odd" data-game-type="odd">
+
+            </div>
+            <div class="hidden game-wrapper" id="even" data-game-type="even">
+
+            </div>
+            <!-- <div class = "hidden">
+                <div id="show_result">
+                    <ul id=""></ul>
+                    
+                </div> -->
+            </div>
+        </div>
+    </body>
+</html>
