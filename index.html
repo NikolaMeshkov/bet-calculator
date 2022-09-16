@@ -1,35 +1,134 @@
-<!DOCTYPE html>
+<!DOCTYPE html >
     <head> 
         <title> Bet - Calculator</title>
         <style>
+            .background_color {
+               background-color: #d1d1ed;
+            }
             .hidden {
                 display:none;
             }
             .margin {
                 margin-top: 10px;
             }
+            .bottom_border {
+                border-bottom: 5px;
+            }
+            .flex-container{
+                
+                display: flex; 
+            }
+            .flex-container .column{
+                padding: 10px;
+                flex: 1;
+                justify-content: center;
+            }
+            ul.no-bullets {
+                list-style-type: none !important;
+                padding-inline-start: 0!important;
+                font-size: 20px;
+                font-family: monospace;
+            }
+            .list-class {
+                margin-top: 2px;
+            }
+            .drop-down {
+                height: 40px;
+                padding: 10px;
+                background-color: rgb(29, 43, 167);
+                color: white;
+                text-align-last: center;
+            }
+            .form {
+                text-align: center;
+                height: 50px;
+                margin-top: 30px;
+            }
+            .text-align-center {
+                text-align: center;
+            }
+            .button-class {
+                width: 150px;
+                height: 35px;
+                background-color: rgb(30, 46, 138);
+                color: white;
+            }
+            .content-align-center {
+                text-align: webkit-center;
+                color: gray;
+            }
+            .text-color {
+                color: rgb(5, 3, 114);
+            }
+            .margin-sides {
+                margin: 0px 30%;
+            }
+            .text-size {
+                font-size: 30px;
+            }
+            .input {
+                height: 30px;
+                font-size: 26px
+            }
         </style>
         <script>
+        
+        
         let num_of_tips = 0;
-        results = []
+        //results = []
         let a = 0;
         results_new = []
 
-        function add_tip () {
-            const el = document.getElementById("game_type")
-            new_element = el.cloneNode(true);
-            new_element.id = el.id + num_of_tips
+        function get_all_result_combinations() {
+            let results = [];
+
+            for (let i  = 0; i <= 120; i++) {
+                results[i] = []
+                for (let j = 0; j <=1; j++){
+                    if (j == 0) {
+                        results[i][j] = Math.floor(i/11)
+                    }
+                    else {
+                        results[i][j] = i % 11
+                    }
+                }
+            }
+            return results;
+        }
+
             
-            //document.body.appendChild(new_element);
-            document.getElementById('games_input').appendChild(new_element)
+
+        function add_tip () {
+            
+            new_game_selector = document.getElementById('game_selector').cloneNode(true)
+            new_game_selector.id = new_game_selector.id + num_of_tips
+            new_game_selector.className = new_game_selector.className + "flex-container "
+            show = document.querySelector("#show")
+            show.appendChild(new_game_selector)
+
+            new_games_input = document.getElementById('games_input').cloneNode(true)
+            new_games_input.id = new_games_input.id + num_of_tips
+            new_games_input.className = new_games_input.className + 'flex-container column'
+            document.querySelector("#game_selector" + num_of_tips).appendChild(new_games_input)
+
+            new_second_select = document.getElementById('second_select').cloneNode(true)
+            new_second_select.id = new_second_select.id + num_of_tips
+            new_second_select.className = new_second_select.className + "games-input flex-container column "
+            document.querySelector("#game_selector" + num_of_tips).appendChild(new_second_select)
+
+
+        
+            new_element = document.getElementById("game_type").cloneNode(true);
+            new_element.id = new_element.id + num_of_tips
+            document.querySelector("#games_input" + num_of_tips).appendChild(new_element)
+          
 
             let new_select_element = document.querySelector("#"+ new_element.id + " > select");
-            add_bet_type_change_listener(new_select_element);
+            add_bet_type_change_listener(new_select_element, num_of_tips);
             num_of_tips++;
         }   
-
-
-        let add_bet_type_change_listener = function(select_element) { 
+       
+        let add_bet_type_change_listener = function(select_element, num) { 
             if (typeof select_element === "undefined") {
                 select_element = document.querySelector("#game_type" + num_of_tips + "> select");
                 
@@ -39,101 +138,68 @@
             }
 
             select_element.addEventListener("change", function() {
-                if (this.value == "winner") {
-                    html = document.getElementById('winner').outerHTML;
-                    select_element.insertAdjacentHTML("afterend", html );
-                }
-                else if (this.value == "total_goals") {
-                    html = document.getElementById('total_goals').outerHTML;
-                    select_element.insertAdjacentHTML("afterend", html );
-                }
-                else if (this.value == "double_chance") {
-                    html = document.getElementById('double_chance').outerHTML;
-                    select_element.insertAdjacentHTML("afterend", html );
-                }
-                else if (this.value == "t1_total_goals") {
-                    html = document.getElementById('t1_total_goals').outerHTML;
-                    select_element.insertAdjacentHTML("afterend", html );
-                }
-                else if (this.value == "t2_total_goals") {
-                    html = document.getElementById('t2_total_goals').outerHTML;
-                    select_element.insertAdjacentHTML("afterend", html);
-                }
-                else if (this.value == "both_teams_score") {
-                    html = document.getElementById('both_teams_score').outerHTML;
-                    select_element.insertAdjacentHTML("afterend", html);
-                }
-                else if (this.value == 'one_team_dont_score') {
-                    console.log("in if")
-                    html = document.getElementById('one_team_dont_score').outerHTML;
-                    select_element.insertAdjacentHTML("afterend", html);
-                }
-                else if (this.value == "odd") {
-                    html = document.getElementById('odd').outerHTML;
-                    select_element.insertAdjacentHTML("afterend", html);
-                }
-                else if (this.value == "even") {
-                    html = document.getElementById('even').outerHTML;
-                    select_element.insertAdjacentHTML("afterend", html);
-                }
+                
+                let option_value = this.value
+               
+                html = document.getElementById(option_value).outerHTML
+                document.querySelector("#second_select" + num).innerHTML = ""
+                document.querySelector("#second_select" + (num)).insertAdjacentHTML("afterbegin",html)
+                
             });
         }
 
-        
-
-        
-
-        function winner_calculate_function(el) {
+       
+        function winner_calculate_function(el, combinations) {
             let type = el.querySelector("select").value;
-            
-            console.log(winner(results, type));
+           
+            return winner(combinations, type);
         };
 
-        function total_goals_calculate_function (el) {
+        function total_goals_calculate_function (el ,combinations) {
             let goals_from = el.querySelector("#goals_from").value;
             let goals_to = el.querySelector("#goals_to").value;
-          
-            console.log(goals_scored(results,goals_from,goals_to));
+            return(goals_scored(combinations,goals_from,goals_to));
           
         };
 
-        function double_chance_calculate_function (el) {
+        function double_chance_calculate_function (el,combinations) {
             let type = el.querySelector("select").value;
             
-            console.log(double_chance(results, type));
+            return (double_chance(combinations, type));
         };
 
-        function odd_calculate_funciton(el) {
-            console.log(odd(results));
+        function odd_calculate_funciton(el,combinations) {
+            return (odd(combinations));
         }
 
-        function even_calculate_funciton(el) {
-           console.log(even(results));
+        function even_calculate_funciton(el,combinations) {
+           
+            return (even(combinations));
            
         }
 
-        function t1_total_goals_calculate_function(el) {
+        function t1_total_goals_calculate_function(el,combinations) {
             let goals_from = el.querySelector("#goalsT1_from").value;
             let goals_to = el.querySelector("#goalsT1_to").value;
 
 
-            console.log(t1_total_goals(results,goals_from,goals_to))
+            return (t1_total_goals(combinations,goals_from,goals_to))
         }
 
-        function t2_total_goals_calculate_fucntion(el) {
+        function t2_total_goals_calculate_fucntion(el,combinations) {
             let goals_from = el.querySelector("#goalsT2_from").value;
             let goals_to = el.querySelector("#goalsT2_to").value;
 
 
-            console.log(t2_total_goals(results,goals_from,goals_to))
+            return (t2_total_goals(combinations,goals_from,goals_to))
         }
 
-        function both_teams_score_calculate_function (el) {
-            console.log(both_teams_score(results));
+        function both_teams_score_calculate_function (el,combinations) {
+            return (both_teams_score(combinations));
         }
 
-        function one_team_dont_score_calculate_function (el) {
-            console.log(one_team_dont_score(results));
+        function one_team_dont_score_calculate_function (el,combinations) {
+            return (one_team_dont_score(combinations));
         }
         
         let calculate_functions = {
@@ -152,213 +218,211 @@
         document.addEventListener('DOMContentLoaded', function() {
             add_bet_type_change_listener();
             document.getElementById("calculate_button").addEventListener("click", function () {
+                document.querySelector("#show_result").innerHTML = ""
+                let unwanted_combinations = get_all_result_combinations();
+                
+                for (element of document.querySelectorAll('.games-input .game-wrapper')) {
                     
-                for (element of document.querySelectorAll('#games_input .game-wrapper')) {
                     let game_type = element.dataset.gameType;
-                    calculate_functions[game_type](element)
-
+                    unwanted_combinations = calculate_functions[game_type](element, unwanted_combinations)                  
                 }
+                createList(unwanted_combinations);
+                
 
             });
 
-        });
+        }); 
+        function take_teams () {
+            let home_team = document.getElementById("home_team").value
+            let away_team = document.getElementById("away_team").value
+            
+            let home_and_away = [home_team, away_team]
 
-       
-        
-
-
-    for (let i  = 0; i <= 120; i++) {
-        results[i] = []
-        for (let j = 0; j <=1; j++){
-            if (j == 0) {
-                results[i][j] = Math.floor(i/11)
-            }
-            else {
-                results[i][j] = i % 11
-            }
+            return home_and_away;
+            
         }
-    }
         
-
-    
-        function winner(array_of_results, win) {
-        for (let result_combination of array_of_results) {
-
-            if (win == 1 && (result_combination[0] > result_combination[1])){
-                
-                 array_of_results.splice(result_combination)
-                
-            } else if (win == "x" && !(result_combination[0] == result_combination[1])) {
-               
-                    results_new[a] = result_combination
-                    a++;
-                
-
-            } else if(win == 2 && !(result_combination[0] < result_combination[1])) {
-               
-                    results_new[a] = result_combination
-                    a++;
+        function createList(unwanted_combinations) {
+            ul = document.createElement("ul")
+            ul.className = ul.className + "no-bullets"
+            h2 = document.createElement("div")
+            h2.className = "text-color text-size"
+            h2.innerHTML = "Резултати со кои го губите облогот"
+            for (let combination of unwanted_combinations) {
+                let li = document.createElement("li");
+                li.className = "list-class"
+                li.innerHTML = ( take_teams()[0] + "    " + combination[0] + " : " +  combination[1] + "    " + take_teams()[1] ) 
+                ul.appendChild(li)
             }
+            document.getElementById("show_result").appendChild(ul)
         }
-        return results_new
+   
+            
+        function winner(combinations, win) {
+            output = [];
+            for (let result_combination of combinations) {
+                if (win == 1 && !(result_combination[0] > result_combination[1])){
+                    output.push(result_combination);          
+                } else if (win == "x" && !(result_combination[0] == result_combination[1])) {
+                    output.push(result_combination);
+                } else if(win == 2 && !(result_combination[0] < result_combination[1])) {            
+                    output.push(result_combination);
+                }
+            }
+            return output;
     }
            
-         function goals_scored (array_of_results,goals,max_goals) {
-            for (let result_combination of array_of_results) {
+        function goals_scored (combinations,goals,max_goals) {
+            output = [];
+            for (let result_combination of combinations) { 
                 if (max_goals == "exactly" && (!(result_combination[0] + result_combination[1]  == goals))) {
-                
-                    results_new[a] = result_combination
-                    a++;
-
+                    output.push(result_combination);
                 } else if (max_goals == "plus" && result_combination[0] + result_combination[1] < goals) {
-                    
-                    results_new[a] = result_combination
-                    a++;
-
-                } else if (max_goals == "no" && result_combination[0] + result_combination[1] != goals) {
-                    
-                    results_new[a] = result_combination
-                    a++;
+                    output.push(result_combination);
+                } else if (max_goals == "no" && result_combination[0] + result_combination[1] != goals) {                 
+                    output.push(result_combination);
+                } else if (result_combination[0] + result_combination[1] < goals || result_combination[0] + result_combination[1] > max_goals) {
+                    output.push(result_combination);
                 }
-                else if (result_combination[0]  >= goals && result_combination[0] + result_combination[1] <= max_goals) {
-
-                            results_new[a] = result_combination
-                            a++;
-                }
-            }           
-            return results_new
+            }                
+            return output;
         }
 
-        function double_chance (array_of_results, type) {
-            for (let result_combination of array_of_results) {
+        function double_chance (combinations, type) {
+            output = [];
+            for (let result_combination of combinations) {
                 if (type == "1x" && result_combination[0] < result_combination[1]){
-
-                    results_new[a] = result_combination;
-                    a++;
+                    output.push(result_combination);
                 } else if (type == 12 && result_combination[0] == result_combination[1]) {
-                    
-                    results_new[a] = result_combination;
-                    a++
+                    output.push(result_combination);
                 } else if (type == "x2" && result_combination[0] > result_combination[1]){
-                    
-                    results_new[a] = result_combination;
-                    a++
+                    output.push(result_combination);
                 }
             }
-            return results_new
+            return output;
         }
 
-        function both_teams_score (array_of_results) {
-            for (let result_combination of array_of_results) {
+        function both_teams_score (combinations) {
+            output = []
+            for (let result_combination of combinations) {
                 if (result_combination[0] == 0 || result_combination[1] == 0 )  {
-                    results_new[a] = result_combination
-                    a++;
+                    output.push(result_combination);
                 }
             }
 
-            return results_new
+            return output
         }
 
-        function one_team_dont_score(array_of_results) {
-            for (let result_combination of array_of_results) {
+        function one_team_dont_score(combinations) {
+            output = [];
+            for (let result_combination of combinations) {
                 if (result_combination[0] != 0 && result_combination[1] != 0 ) {
-                    results_new[a] = result_combination;
-                    a++;
+                    output.push(result_combination);
                 }
             }
-            return results_new
+            return output
         }
 
-        function odd (array_of_results) {
-            for (let result_combination of array_of_results) {
-
+        function odd (combinations) {
+            output = []
+            for (let result_combination of combinations) {
                 if ((result_combination[0] + result_combination[1]) % 2 == 0){
-                    results_new[a] = result_combination;
-                    a++
+                    output.push(result_combination);
                 }
             }
-            return results_new
+            return output
         }
     
-        function even (array_of_results) {
-            for (let result_combination of array_of_results) {
-
+        function even (combinations) {
+            output = []
+            for (let result_combination of combinations) {
                 if ((result_combination[0] + result_combination[1]) % 2 != 0){
-                    results_new[a] = result_combination;
-                    a++
+                    output.push(result_combination);
                 }
             }
-            return results_new
+            return output
         }
 
-        function t1_total_goals (array_of_results,goals,max_goals) {
-            for (let result_combination of array_of_results) {
-                if (max_goals == "exactly" && (!(result_combination[0]  == goals))) {
-                
-                    results_new[a] = result_combination
-                    a++;
-
+        function t1_total_goals (combinations,goals,max_goals) {
+            output = []
+            for (let result_combination of combinations) {
+                if (max_goals == "exactly" && (!(result_combination[0]  == goals))) {          
+                    output.push(result_combination);
                 } else if (max_goals == "plus" && result_combination[0] < goals) {
-                    
-                    results_new[a] = result_combination
-                    a++;
-
+                    output.push(result_combination);
                 } else if (max_goals == "no" && result_combination[0] != goals) {
-                    
-                    results_new[a] = result_combination
-                    a++;
+                    output.push(result_combination);
                 }
-                else if (result_combination[0]  >= goals && result_combination[0] <= max_goals) {
-
-                            results_new[a] = result_combination
-                            a++;
+                else if (result_combination[0]  < goals || result_combination[0] > max_goals) {
+                    output.push(result_combination);
                 }
             }           
-            return results_new
+            return output
         }
         
-        function t2_total_goals (array_of_results,goals,max_goals) {
-            for (let result_combination of array_of_results) {
+        function t2_total_goals (combinations,goals,max_goals) {
+            output = []
+            for (let result_combination of combinations) {
                 if (max_goals == "exactly" && (!(result_combination[1]  == goals))) {
-                
-                    results_new[a] = result_combination
-                    a++;
-
-                } else if (max_goals == "plus" && result_combination[1] < goals) {
-                    
-                    results_new[a] = result_combination
-                    a++;
-
+                    output.push(result_combination);
+                } else if (max_goals == "plus" && result_combination[1] < goals) {                  
+                    output.push(result_combination);
                 } else if (max_goals == "no" && result_combination[1] != goals) {
-                    
-                    results_new[a] = result_combination
-                    a++;
+                    output.push(result_combination);
                 }
-                else if (result_combination[1]  >= goals && result_combination[1] <= max_goals) {
-
-                            results_new[a] = result_combination
-                            a++;
+                else if (result_combination[1]  < goals || result_combination[1] > max_goals) {
+                    output.push(result_combination);
                 }
             }           
-            return results_new
+            return output
         }
     
         </script>
     </head>
-    <body>        
-        <button  class = 'margin' type="button" onclick= "add_tip()">Додади тип!</button>
-
-        <div id="games_input">
+    <body class="background_color">      
+        <h1 class="text-align-center text-color"> Bet - calculator</h1>  
+        <div>
+            <div>
+                <form class="form">
+                    <label for="home_team" class="text-size">Венси домашен тим:</label>
+                    <input id = "home_team"class="background_color input">
+                </form>
+            </div>
+        <div>
+                <form class="form">
+                    <label for="away_team" class="text-size">Венси гостински тим:</label>
+                    <input id = "away_team" class="background_color input">
+                </form>
+            </div>
+        </div>
+      
+         
+        <div id = "show" class="text-align-center margin-sides">
 
         </div>
-
-
-    
-        <button class = 'margin' type="button" id="calculate_button">Пресметај!</button>
+        <div class="text-align-center">
+        <button  class = 'margin button-class' type="button" onclick= "add_tip()">Додади тип!</button>
+      
+            <button class = 'margin button-class' type="button" id="calculate_button">Пресметај!</button>
+        </div>
+        
         <div id="templates">
+            <div id = "game_selector" class="games_selector ">
+                
+            </div>
+
+            <div id="games_input"   >
+    
+            </div>
+        
+            <div id = "second_select"  > 
+
+            </div>
+            
+            
             <div class="hidden ">
                 <div id="game_type" class = 'margin' >
-                    <select id="type" name="type" class="bet-type">
+                    <select id="type" name="type" class="bet-type drop-down">
                         <option value = "" selected disabled hidden>Одбери тип на игра</option>
                         <option value="winner">Победник на мечот</option>
                         <option value="total_goals">Вкупно голови</option>
@@ -374,7 +438,7 @@
             </div>
             <div class="hidden">
                 <div id='winner' class="game-wrapper margin" data-game-type="winner"> 
-                    <select id='winner_select' >
+                    <select id='winner_select' class="drop-down" >
                         <option value = '' selected disabled hidden> Одбери тип</option>
                         <option value = '1'>1</option> 
                         <option value = 'x'>x</option> 
@@ -384,7 +448,7 @@
             </div>
             <div class="hidden" >   
                 <div id="total_goals" class="game-wrapper margin" data-game-type="total_goals">      
-                    <select id= 'goals_from' class="margin">
+                    <select id= 'goals_from' class="drop-down">
                         <option value = '' selected disabled hidden>Од  </option>
                         <option value = '0'>0</option> 
                         <option value = '1'>1</option> 
@@ -397,7 +461,7 @@
                         <option value = '8'>8</option>
                         <option value = '8'>9</option>
                     </select>
-                    <select id='goals_to' class="margin"  >
+                    <select id='goals_to'  class="drop-down" >
                         <option value = '' selected disabled hidden>До</option>
                         <option value = '1'>1</option> 
                         <option value = '2'>2</option>
@@ -416,7 +480,7 @@
             </div>
             <div class="hidden">
                 <div id = 'double_chance' class="game-wrapper margin" data-game-type="double_chance" > 
-                    <select id= 'double_chance_sel' >
+                    <select id= 'double_chance_sel' class="drop-down"  >
                         <option value = '' selected disabled hidden> Одбери тип</option>
                         <option value = '1x'>1x</option> 
                         <option value = '12'>12</option> 
@@ -426,7 +490,7 @@
             </div>
             <div class="hidden" >   
                 <div id="t1_total_goals" class="game-wrapper margin" data-game-type="t1_total_goals"> 
-                    <select id= 'goalsT1_from' name = 'tip' class="margin">
+                    <select id= 'goalsT1_from' class="drop-down"   >
                         <option value = '' selected disabled hidden> Од</option>
                         <option value = '0'>0</option> 
                         <option value = '1'>1</option> 
@@ -439,7 +503,7 @@
                         <option value = '8'>8</option>
                         <option value = '8'>9</option>
                     </select>
-                    <select id= 'goalsT1_to' name = 'tip' class="margin">
+                    <select id= 'goalsT1_to' class="drop-down"  >
                         <option value = '' selected disabled hidden> До</option>
                         <option value = '1'>1</option> 
                         <option value = '2'>2</option>
@@ -458,7 +522,7 @@
             </div>
             <div class="hidden" >   
                 <div id="t2_total_goals" class="game-wrapper margin" data-game-type="t2_total_goals">    
-                        <select id= 'goalsT2_from' name = 'tip'>
+                        <select id= 'goalsT2_from' class="drop-down" >
                             <option value = '' selected disabled hidden> Одбери тип</option>
                             <option value = '0'>0</option> 
                             <option value = '1'>1</option> 
@@ -471,7 +535,7 @@
                             <option value = '8'>8</option>
                             <option value = '8'>9</option>
                         </select>
-                        <select id= 'goalsT2_to' name = 'tip' class="margin">
+                        <select id= 'goalsT2_to' class="drop-down" >
                             <option value = '' selected disabled hidden> Одбери тип</option>
                             <option value = '1'>1</option> 
                             <option value = '2'>2</option>
@@ -500,12 +564,14 @@
             <div class="hidden game-wrapper" id="even" data-game-type="even">
 
             </div>
-            <!-- <div class = "hidden">
-                <div id="show_result">
-                    <ul id=""></ul>
-                    
-                </div> -->
             </div>
-        </div>
+            <div id="show_result" class="text-align-center" >
+               
+                
+                   
+                              
+            </div>
+            
+      
     </body>
 </html>
