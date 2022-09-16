@@ -27,7 +27,7 @@
                 list-style-type: none !important;
                 padding-inline-start: 0!important;
                 font-size: 20px;
-                font-family: monospace;
+                font-family: monospace, sans-serif;
             }
             .list-class {
                 margin-top: 2px;
@@ -65,6 +65,7 @@
             }
             .text-size {
                 font-size: 30px;
+                font-family: sans-serif;
             }
             .input {
                 height: 30px;
@@ -246,15 +247,22 @@
             ul = document.createElement("ul")
             ul.className = ul.className + "no-bullets"
             h2 = document.createElement("div")
-            h2.className = "text-color text-size"
-            h2.innerHTML = "Резултати со кои го губите облогот"
-            for (let combination of unwanted_combinations) {
-                let li = document.createElement("li");
-                li.className = "list-class"
-                li.innerHTML = ( take_teams()[0] + "    " + combination[0] + " : " +  combination[1] + "    " + take_teams()[1] ) 
-                ul.appendChild(li)
+            if (unwanted_combinations == 0) {
+                h2.className = "text-color text-size"
+                h2.innerHTML = "Нема резултати со кои го губите облогот" 
+                document.querySelector("#result").innerHTML = h2.outerHTML;
+            } else {
+                h2.className = "text-color text-size"
+                h2.innerHTML = "Резултати со кои го губите облогот: " 
+                document.querySelector("#result").innerHTML = h2.outerHTML;
+                for (let combination of unwanted_combinations) {
+                    let li = document.createElement("li");
+                    li.className = "list-class"
+                    li.innerHTML = ( take_teams()[0] + "    " + combination[0] + " : " +  combination[1] + "    " + take_teams()[1] ) 
+                    ul.appendChild(li)
+                }
+                document.getElementById("show_result").appendChild(ul)
             }
-            document.getElementById("show_result").appendChild(ul)
         }
    
             
@@ -404,6 +412,9 @@
         <button  class = 'margin button-class' type="button" onclick= "add_tip()">Додади тип!</button>
       
             <button class = 'margin button-class' type="button" id="calculate_button">Пресметај!</button>
+        </div>
+        <div id = "result" class="text-align-center margin">
+
         </div>
         
         <div id="templates">
