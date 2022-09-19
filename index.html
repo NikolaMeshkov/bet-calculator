@@ -1,7 +1,15 @@
 <!DOCTYPE html >
     <head> 
         <title> Bet - Calculator</title>
-        <style>
+        
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" 
+            integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+                       
+           
+            <style>
+            .top-buffer {
+                margin-top: 20px;
+            }
             .background_color {
                background-color: #d1d1ed;
             }
@@ -15,7 +23,7 @@
                 border-bottom: 5px;
             }
             .flex-container{
-                
+                justify-content: center;
                 display: flex; 
             }
             .flex-container .column{
@@ -26,8 +34,9 @@
             ul.no-bullets {
                 list-style-type: none !important;
                 padding-inline-start: 0!important;
-                font-size: 20px;
-                font-family: monospace, sans-serif;
+                font-size: 25px;
+                font-family: Arial, Helvetica, sans-serif;
+                color: rgb(5, 3, 114);
             }
             .list-class {
                 margin-top: 2px;
@@ -59,14 +68,13 @@
             }
             .text-color {
                 color: rgb(5, 3, 114);
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 30px
             }
             .margin-sides {
                 margin: 0px 30%;
             }
-            .text-size {
-                font-size: 30px;
-                font-family: sans-serif;
-            }
+           
             .input {
                 height: 30px;
                 font-size: 26px
@@ -103,18 +111,18 @@
             
             new_game_selector = document.getElementById('game_selector').cloneNode(true)
             new_game_selector.id = new_game_selector.id + num_of_tips
-            new_game_selector.className = new_game_selector.className + "flex-container "
+            new_game_selector.className = new_game_selector.className + " row top-buffer"
             show = document.querySelector("#show")
             show.appendChild(new_game_selector)
 
             new_games_input = document.getElementById('games_input').cloneNode(true)
             new_games_input.id = new_games_input.id + num_of_tips
-            new_games_input.className = new_games_input.className + 'flex-container column'
+            new_games_input.className = new_games_input.className + 'col-md-4 col-lg-2  px-0'
             document.querySelector("#game_selector" + num_of_tips).appendChild(new_games_input)
 
             new_second_select = document.getElementById('second_select').cloneNode(true)
             new_second_select.id = new_second_select.id + num_of_tips
-            new_second_select.className = new_second_select.className + "games-input flex-container column "
+            new_second_select.className = new_second_select.className + "games-input col-md-4 col-lg-2  "
             document.querySelector("#game_selector" + num_of_tips).appendChild(new_second_select)
 
 
@@ -248,11 +256,11 @@
             ul.className = ul.className + "no-bullets"
             h2 = document.createElement("div")
             if (unwanted_combinations == 0) {
-                h2.className = "text-color text-size"
+                h2.className = "container"
                 h2.innerHTML = "Нема резултати со кои го губите облогот" 
-                document.querySelector("#result").innerHTML = h2.outerHTML;
+                document.querySelector("#result").innerHTML = h2.innerHTML;
             } else {
-                h2.className = "text-color text-size"
+                h2.className = "text-color text-size row "
                 h2.innerHTML = "Резултати со кои го губите облогот: " 
                 document.querySelector("#result").innerHTML = h2.outerHTML;
                 for (let combination of unwanted_combinations) {
@@ -388,37 +396,44 @@
         </script>
     </head>
     <body class="background_color">      
-        <h1 class="text-align-center text-color"> Bet - calculator</h1>  
-        <div>
-            <div>
-                <form class="form">
-                    <label for="home_team" class="text-size">Венси домашен тим:</label>
-                    <input id = "home_team"class="background_color input">
-                </form>
+        <h1 class="container-12 offset-1"> 
+            <div class="row text-color">
+                Bet - calculator
             </div>
-        <div>
-                <form class="form">
-                    <label for="away_team" class="text-size">Венси гостински тим:</label>
-                    <input id = "away_team" class="background_color input">
-                </form>
+        </h1>  
+        <div class="container-12 offset-1">
+            
+            <div class="row top-buffer col-sm-8 col-lg-4 ">
+                <div class="input-group flex-nowrap px-0">
+                    <span class="input-group-text " id="addon-wrapping">Домашен тим</span>
+                    <input type="text" class="form-control"  aria-describedby="addon-wrapping" id="home_team">
+                  </div>
+            </div>
+            <div class="row top-buffer col-sm-8 col-lg-4  ">
+                <div class="input-group flex-nowrap px-0 ">
+                    <span class="input-group-text " id="addon-wrapping">Гостински тим</span>
+                    <input type="text" class="form-control"  aria-describedby="addon-wrapping" id="away_team">
+                  </div>
             </div>
         </div>
       
          
-        <div id = "show" class="text-align-center margin-sides">
+        <div id = "show" class="container-12 offset-1">
 
         </div>
-        <div class="text-align-center">
-        <button  class = 'margin button-class' type="button" onclick= "add_tip()">Додади тип!</button>
-      
-            <button class = 'margin button-class' type="button" id="calculate_button">Пресметај!</button>
+        <div class="container-12 offset-1">
+            <div class="row top-buffer col-12 "> 
+                <button  class = 'btn btn-primary col-lg-2 col-md-8' type="button" onclick= "add_tip()">Додади тип!</button>
+            
+                <button class = 'btn btn-primary col-lg-2 col-md-8 ms-lg-5 mt-md-3 mt-lg-0' type="button" id="calculate_button">Пресметај!</button>
+            </div>
         </div>
-        <div id = "result" class="text-align-center margin">
+        <div id = "result" class="container-12 offset-1 text-color">
 
         </div>
         
         <div id="templates">
-            <div id = "game_selector" class="games_selector ">
+            <div id = "game_selector" class="games_selector">
                 
             </div>
 
@@ -433,7 +448,7 @@
             
             <div class="hidden ">
                 <div id="game_type" class = 'margin' >
-                    <select id="type" name="type" class="bet-type drop-down">
+                    <select id="type" name="type" class="bet-type form-select">
                         <option value = "" selected disabled hidden>Одбери тип на игра</option>
                         <option value="winner">Победник на мечот</option>
                         <option value="total_goals">Вкупно голови</option>
@@ -449,7 +464,7 @@
             </div>
             <div class="hidden">
                 <div id='winner' class="game-wrapper margin" data-game-type="winner"> 
-                    <select id='winner_select' class="drop-down" >
+                    <select id='winner_select' class="form-select" >
                         <option value = '' selected disabled hidden> Одбери тип</option>
                         <option value = '1'>1</option> 
                         <option value = 'x'>x</option> 
@@ -459,7 +474,7 @@
             </div>
             <div class="hidden" >   
                 <div id="total_goals" class="game-wrapper margin" data-game-type="total_goals">      
-                    <select id= 'goals_from' class="drop-down">
+                    <select id= 'goals_from' class="form-select">
                         <option value = '' selected disabled hidden>Од  </option>
                         <option value = '0'>0</option> 
                         <option value = '1'>1</option> 
@@ -472,7 +487,7 @@
                         <option value = '8'>8</option>
                         <option value = '8'>9</option>
                     </select>
-                    <select id='goals_to'  class="drop-down" >
+                    <select id='goals_to'  class="form-select" >
                         <option value = '' selected disabled hidden>До</option>
                         <option value = '1'>1</option> 
                         <option value = '2'>2</option>
@@ -491,7 +506,7 @@
             </div>
             <div class="hidden">
                 <div id = 'double_chance' class="game-wrapper margin" data-game-type="double_chance" > 
-                    <select id= 'double_chance_sel' class="drop-down"  >
+                    <select id= 'double_chance_sel' class="form-select"  >
                         <option value = '' selected disabled hidden> Одбери тип</option>
                         <option value = '1x'>1x</option> 
                         <option value = '12'>12</option> 
@@ -501,7 +516,7 @@
             </div>
             <div class="hidden" >   
                 <div id="t1_total_goals" class="game-wrapper margin" data-game-type="t1_total_goals"> 
-                    <select id= 'goalsT1_from' class="drop-down"   >
+                    <select id= 'goalsT1_from' class="form-select"   >
                         <option value = '' selected disabled hidden> Од</option>
                         <option value = '0'>0</option> 
                         <option value = '1'>1</option> 
@@ -514,7 +529,7 @@
                         <option value = '8'>8</option>
                         <option value = '8'>9</option>
                     </select>
-                    <select id= 'goalsT1_to' class="drop-down"  >
+                    <select id= 'goalsT1_to' class="form-select"  >
                         <option value = '' selected disabled hidden> До</option>
                         <option value = '1'>1</option> 
                         <option value = '2'>2</option>
@@ -533,7 +548,7 @@
             </div>
             <div class="hidden" >   
                 <div id="t2_total_goals" class="game-wrapper margin" data-game-type="t2_total_goals">    
-                        <select id= 'goalsT2_from' class="drop-down" >
+                        <select id= 'goalsT2_from' class="form-select" >
                             <option value = '' selected disabled hidden> Од </option>
                             <option value = '0'>0</option> 
                             <option value = '1'>1</option> 
@@ -546,7 +561,7 @@
                             <option value = '8'>8</option>
                             <option value = '8'>9</option>
                         </select>
-                        <select id= 'goalsT2_to' class="drop-down" >
+                        <select id= 'goalsT2_to' class="form-select" >
                             <option value = '' selected disabled hidden>До</option>
                             <option value = '1'>1</option> 
                             <option value = '2'>2</option>
@@ -576,13 +591,13 @@
 
             </div>
             </div>
-            <div id="show_result" class="text-align-center" >
-               
-                
-                   
+            <div id="show_result" class="container-12 offset-1" >
+            
                               
             </div>
             
-      
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
     </body>
 </html>
