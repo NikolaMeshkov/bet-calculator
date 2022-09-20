@@ -122,7 +122,7 @@
 
             new_second_select = document.getElementById('second_select').cloneNode(true)
             new_second_select.id = new_second_select.id + num_of_tips
-            new_second_select.className = new_second_select.className + "games-input col-md-4 col-lg-5  "
+            new_second_select.className = new_second_select.className + "games-input col-md-4 col-lg-5 px-3  "
             document.querySelector("#game_selector" + num_of_tips).appendChild(new_second_select)
 
 
@@ -256,7 +256,7 @@
             ul.className = ul.className + "no-bullets"
             h2 = document.createElement("div")
             if (unwanted_combinations == 0) {
-                h2.className = "container text-color"
+                h2.className = "container-12 text-color px-0"
                 h2.innerHTML = "Нема резултати со кои го губите облогот" 
                 document.querySelector("#show_result").appendChild( h2);
             } else {
@@ -437,7 +437,7 @@
                     </div>
                 </div>
 
-                <div id="show_result" class="col-sm-10 col-lg-6 offset-sm-2 offset-lg-0 top-buffer" >
+                <div id="show_result" class="col-sm-10 col-lg-6 offset-sm-2 offset-lg-0 top-buffer px-0" >
                 
                                 
                 </div>
