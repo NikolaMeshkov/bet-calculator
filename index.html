@@ -79,10 +79,15 @@
                 height: 30px;
                 font-size: 26px
             }
+            .button-align {
+                max-height: 38px;
+            }
+          
+           
         </style>
         <script>
         
-        
+      
         let num_of_tips = 0;
         //results = []
         let a = 0;
@@ -109,6 +114,7 @@
 
         function add_tip () {
             
+
             new_game_selector = document.getElementById('game_selector').cloneNode(true)
             new_game_selector.id = new_game_selector.id + num_of_tips
             new_game_selector.className = new_game_selector.className + " row top-buffer"
@@ -117,15 +123,17 @@
 
             new_games_input = document.getElementById('games_input').cloneNode(true)
             new_games_input.id = new_games_input.id + num_of_tips
-            new_games_input.className = new_games_input.className + 'col-md-4 col-lg-5  px-0'
+            new_games_input.className = new_games_input.className + 'col-sm-4 col-lg-5  px-0'
             document.querySelector("#game_selector" + num_of_tips).appendChild(new_games_input)
 
             new_second_select = document.getElementById('second_select').cloneNode(true)
             new_second_select.id = new_second_select.id + num_of_tips
-            new_second_select.className = new_second_select.className + "games-input col-md-4 col-lg-5 px-3  "
+            new_second_select.className = new_second_select.className + "games-input col-sm-3 col-lg-4 px-3  "
             document.querySelector("#game_selector" + num_of_tips).appendChild(new_second_select)
 
-
+            new_close_button = document.getElementById("close_button").cloneNode(true)
+            new_close_button.id =  num_of_tips 
+            document.querySelector("#game_selector" + num_of_tips).appendChild(new_close_button) 
         
             new_element = document.getElementById("game_type").cloneNode(true);
             new_element.id = new_element.id + num_of_tips
@@ -134,6 +142,7 @@
 
             let new_select_element = document.querySelector("#"+ new_element.id + " > select");
             add_bet_type_change_listener(new_select_element, num_of_tips);
+            
             num_of_tips++;
         }   
        
@@ -392,40 +401,44 @@
             }           
             return output
         }
+
+        function remove_tip (index_of_select_to_delete) {
+            document.querySelector('#game_selector' + index_of_select_to_delete).remove();
+        }
     
         </script>
     </head>
-    <body class="background_color">      
+    <body class="background_color" onload="add_tip()">      
         <div id="inputs" class="container-12">
             <div class="row">
                 <div class="col-lg-6">
-                    <h1 class="container-12 offset-2 top-buffer">
+                    <h1 class="row offset-2 offset-sm-2 top-buffer">
                         <div class="row text-color">
                             Калкулатор за обложувалница
                         </div>
                     </h1>  
-                    <div class="container-12 offset-2">
+                    <div class="row offset-2 offset-sm-2">
                         
                         <div class="row top-buffer col-sm-8 col-lg-10 ">
                             <div class="input-group flex-nowrap px-0">
                                 <span class="input-group-text " id="addon-wrapping">Домашен тим</span>
-                                <input type="text" class="form-control"  aria-describedby="addon-wrapping" id="home_team">
+                                <input type="text" class="form-control" value="Home Team"  aria-describedby="addon-wrapping" id="home_team">
                             </div>
                         </div>
                         <div class="row top-buffer col-sm-8 col-lg-10  ">
                             <div class="input-group flex-nowrap px-0 ">
                                 <span class="input-group-text " id="addon-wrapping">Гостински тим</span>
-                                <input type="text" class="form-control"  aria-describedby="addon-wrapping" id="away_team">
+                                <input type="text" class="form-control" value="Away Team"  aria-describedby="addon-wrapping" id="away_team">
                             </div>
                         </div>
                     </div>
         
                 
                 
-                    <div id = "show" class="container-12 offset-2">
+                    <div id = "show" class="row offset-2 offset-sm-2">
 
                     </div>
-                    <div class="container-12 offset-2">
+                    <div class="row offset-2 offset-sm-2">
                         <div class="row top-buffer col-12 "> 
                             <button  class = 'btn btn-primary col-lg-4 col-md-8' type="button" onclick= "add_tip()">Додади тип!</button>
                         
@@ -444,7 +457,7 @@
             </div>
         </div>
         <div id="templates">
-            <div id = "game_selector" class="games_selector">
+            <div id = "game_selector" class="games_selector" data-closable = "slight-out-right">
                 
             </div>
 
@@ -601,7 +614,16 @@
             <div class="hidden game-wrapper" id="even" data-game-type="even">
 
             </div>
+            
+            <div class=" hidden ">    
+                <button  id="close_button" class = ' close-button btn btn-danger col-lg-1 col-sm-1 px-0 margin button-align ' type="button" onclick="remove_tip(this.id)" id="c_button"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"></path>
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"></path>
+                    </svg>
+                </button>
             </div>
+        </div>
         
             
        
